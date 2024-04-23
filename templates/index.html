@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style type="text/css">
+      input:required:invalid {
+  border-color: #c00000;
+}
+
+html {
+  font-size: small;
+}
+
+    </style>
+  <title>API</title>
+</head>
+<body>
+
+
+  <ul class="nav justify-content-center shadow-lg p-3 mb-5 bg-white rounded">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="#">API</a>
+  </li>
+</ul><br><br>
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3 shadow-lg p-3 mb-5 bg-white rounded" style="height: 500px;">
+      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-search"></i></h3>
+
+      <label class="form-label" for="api_key">Clef API:</label><br>
+      <input class="form-control" type="password" id="api_key" name="api_key" required><br>
+
+
+      <label class="form-label" for="server_id">Serveur:</label><br>
+      <input type="text" id="server_id" name="server_id" class="form-control" required><br>
+      <button id="btnsubmit" type="submit" class="btn btn-primary btn-sm" onclick="fetchAPI()">Rechercher</button><br>
+
+
+      <br><label class="form-label" for="application">Application:</label><br>
+      <input type="text" id="application" name="application" class="form-control" required><br>
+      <button id="btnsubmitapp" type="submit" class="btn btn-info btn-sm" onclick="fetchApplication()">Rechercher</button>
+    </div>
+
+    <div class="col-md-4 shadow-lg p-3 mb-5 bg-white rounded" style="margin-left: 20px;">
+      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-server"></i></i> </h3><br>
+      <div class="table-responsive-sm" style="margin: 5px;">
+        <table class="table">
+          <tbody id="result">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-md-4 shadow-lg p-3 mb-5 bg-white rounded" style="margin-left: 20px; height: 150px;">
+      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-database"></i></i> </h3><br>
+      <ul>Mise à jour de la base, il y a:<b> {{ db_age }} jour(s)<b></ul>
+      <ul>Type de prestation: <b id="presta"> <b></ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<script>
+  async function fetchAPI() {
+    const serverId = document.getElementById('server_id').value;
+    const apiKey = document.getElementById('api_key').value;
+
+    try {
+      const response = await fetch(`/items/${serverId}`, {
+        headers: {
+          'accept': 'application/json',
+          'access_token': apiKey
+        }
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      // Display the data in the result div
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+
+      if (data.length > 0) {
+        const table = document.createElement('table');
+        table.classList.add('table');
+        table.classList.add('table-striped');
+        table.classList.add('table-dark');
+        table.classList.add('table-bordered');
+        table.classList.add('table-hover');
+
+        // Create table body
+        const tbody = document.createElement('tbody');
+        const columnNames = data[0];
+        const values = data[1][0];
+
+        const presta = document.getElementById('presta');
+        presta.innerHTML = '';
+        presta.innerHTML = data[1][0][65];
+        console.log("prestation: " + data[1][0][65])
+
+        for (let i = 0; i < columnNames.length; i++) {
+          const row = document.createElement('tr');
+
+          // Create table cell for column name
+          const columnNameCell = document.createElement('td');
+          columnNameCell.textContent = columnNames[i];
+          row.appendChild(columnNameCell);
+
+          // Create table cell for corresponding value
+          const valueCell = document.createElement('td');
+          valueCell.textContent = values[i] || 'N/A'; // Add "N/A" if value is empty or null
+          row.appendChild(valueCell);
+
+          tbody.appendChild(row);
+        }
+
+        table.appendChild(tbody);
+        resultDiv.appendChild(table);
+      } else {
+        resultDiv.textContent = 'Aucune données.';
+      }
+    } catch (error) {
+      console.error("Failed to fetch API:", error);
+    }
+  }
+
+
+  async function fetchApplication() {
+    const application = document.getElementById('application').value;
+    const apiKey = document.getElementById('api_key').value;
+  
+    try {
+      const response = await fetch(`/applications/${application}`, {
+        headers: {
+          'accept': 'application/json',
+          'access_token': apiKey
+        }
+      });
+  
+      const data = await response.json();
+      console.log(data);
+  
+      // Convert the data to a JSON string
+      const jsonData = JSON.stringify(data);
+  
+      // Store the JSON data in local storage
+      localStorage.setItem('applicationData', jsonData);
+  
+      // Redirect to the application.html page
+      window.location.href = '/application';
+    } catch (error) {
+      console.error("Failed to fetch application:", error);
+    }
+  }
+  
+  
+  
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
