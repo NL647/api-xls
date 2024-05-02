@@ -33,7 +33,7 @@ html {
 <div class="container">
   <div class="row">
     <div class="col-md-3 shadow-lg p-3 mb-5 bg-white rounded" style="height: 500px;">
-      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-search"></i></h3>
+      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-search" style="color: white;"></i></h3>
 
       <label class="form-label" for="api_key">Clef API:</label><br>
       <input class="form-control" type="password" id="api_key" name="api_key" required><br>
@@ -50,7 +50,7 @@ html {
     </div>
 
     <div class="col-md-4 shadow-lg p-3 mb-5 bg-white rounded" style="margin-left: 20px;">
-      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-server"></i></i> </h3><br>
+      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-server" style="color: white;"></i></i> </h3><br>
       <div class="table-responsive-sm" style="margin: 5px;">
         <table class="table">
           <tbody id="result">
@@ -60,7 +60,7 @@ html {
     </div>
 
     <div class="col-md-4 shadow-lg p-3 mb-5 bg-white rounded" style="margin-left: 20px; height: 150px;">
-      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-database"></i></i> </h3><br>
+      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-database" style="color: white;"></i></i> </h3><br>
       <ul>Mise à jour de la base, il y a:<b> {{ db_age }} jour(s)<b></ul>
       <ul>Type de prestation: <b id="presta"> <b></ul>
 
@@ -79,63 +79,65 @@ html {
     const apiKey = document.getElementById('api_key').value;
 
     try {
-      const response = await fetch(`/items/${serverId}`, {
-        headers: {
-          'accept': 'application/json',
-          'access_token': apiKey
+        const response = await fetch(`/items/${serverId}`, {
+            headers: {
+                'accept': 'application/json',
+                'access_token': apiKey
+            }
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        // Display the data in the result div
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '';
+
+        if (Array.isArray(data) && data.length > 1 && Array.isArray(data[1]) && data[1].length > 0) {
+            const table = document.createElement('table');
+            table.classList.add('table');
+            table.classList.add('table-striped');
+            table.classList.add('table-dark');
+            table.classList.add('table-bordered');
+            table.classList.add('table-hover');
+
+            // Create table body
+            const tbody = document.createElement('tbody');
+            const columnNames = data[0];
+            const values = data[1][0];
+
+            const presta = document.getElementById('presta');
+            presta.innerHTML = '';
+            presta.innerHTML = data[1][0][65];
+            console.log("prestation: " + data[1][0][65])
+
+            for (let i = 0; i < columnNames.length; i++) {
+                const row = document.createElement('tr');
+
+                // Create table cell for column name
+                const columnNameCell = document.createElement('td');
+                columnNameCell.textContent = columnNames[i];
+                row.appendChild(columnNameCell);
+
+                // Create table cell for corresponding value
+                const valueCell = document.createElement('td');
+                valueCell.textContent = values[i] || 'N/A'; // Add "N/A" if value is empty or null
+                row.appendChild(valueCell);
+
+                tbody.appendChild(row);
+            }
+
+            table.appendChild(tbody);
+            resultDiv.appendChild(table);
+        } else {
+            resultDiv.textContent = 'Aucune données.';
+            alert("Aucune données pour le serveur: " + serverId);
         }
-      });
-
-      const data = await response.json();
-      console.log(data);
-
-      // Display the data in the result div
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = '';
-
-      if (data.length > 0) {
-        const table = document.createElement('table');
-        table.classList.add('table');
-        table.classList.add('table-striped');
-        table.classList.add('table-dark');
-        table.classList.add('table-bordered');
-        table.classList.add('table-hover');
-
-        // Create table body
-        const tbody = document.createElement('tbody');
-        const columnNames = data[0];
-        const values = data[1][0];
-
-        const presta = document.getElementById('presta');
-        presta.innerHTML = '';
-        presta.innerHTML = data[1][0][65];
-        console.log("prestation: " + data[1][0][65])
-
-        for (let i = 0; i < columnNames.length; i++) {
-          const row = document.createElement('tr');
-
-          // Create table cell for column name
-          const columnNameCell = document.createElement('td');
-          columnNameCell.textContent = columnNames[i];
-          row.appendChild(columnNameCell);
-
-          // Create table cell for corresponding value
-          const valueCell = document.createElement('td');
-          valueCell.textContent = values[i] || 'N/A'; // Add "N/A" if value is empty or null
-          row.appendChild(valueCell);
-
-          tbody.appendChild(row);
-        }
-
-        table.appendChild(tbody);
-        resultDiv.appendChild(table);
-      } else {
-        resultDiv.textContent = 'Aucune données.';
-      }
     } catch (error) {
-      console.error("Failed to fetch API:", error);
+        console.error("Failed to fetch API:", error);
     }
-  }
+}
+
 
 
   async function fetchApplication() {
@@ -155,7 +157,17 @@ html {
   
       // Convert the data to a JSON string
       const jsonData = JSON.stringify(data);
-  
+
+      // Retrieve previous data from local storage
+      const previousData = localStorage.getItem('applicationData');
+
+      // Check if previous data exists
+      if (previousData) {
+          // If previous data exists, remove it
+          localStorage.removeItem('applicationData');
+      }
+
+ 
       // Store the JSON data in local storage
       localStorage.setItem('applicationData', jsonData);
   
