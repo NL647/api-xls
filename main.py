@@ -14,7 +14,7 @@ import uvicorn
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from typing_extensions import Annotated
 
-app = FastAPI()
+FastAPI(docs_url=None, redoc_url=None)#desactive swagger
 # auth
 security = HTTPBasic()
 
