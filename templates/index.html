@@ -7,14 +7,88 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
     <style type="text/css">
       input:required:invalid {
   border-color: #c00000;
 }
 
-html {
-  font-size: small;
+
+
+html{
+font-family:Roboto, sans-serif !important;
+font-size: small;
 }
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 2;
+  border-top: 5px solid rgba(61, 71, 86, 0.5);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.roboto-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.form-label{
+  margin-bottom: 1rem;
+
+}
+
+button {
+ padding: 5px 20px;
+ border: unset;
+ border-radius: 5px;
+ color: white;
+ z-index: 1;
+ background: #3d4756;
+ position: relative;
+ 
+ font-size: 15px;
+ -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ transition: all 250ms;
+ overflow: hidden;
+}
+
+button::before {
+ content: "";
+ position: absolute;
+ top: 0;
+ left: 0;
+ height: 100%;
+ width: 0;
+ border-radius: 5px;
+ background-color: white;
+ color: #3d4756;
+ z-index: -1;
+ -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+ transition: all 250ms;
+
+}
+
+button:hover {
+ color: #3d4756;
+}
+
+button:hover::before {
+ width: 100%;
+}
+
+
+
+
+
 
     </style>
   <title>API</title>
@@ -22,9 +96,9 @@ html {
 <body>
 
 
-  <ul class="nav justify-content-center shadow-lg p-3 mb-5 bg-white rounded">
+  <ul class="nav justify-content-left shadow-lg p-3 mb-5 bg-primary-subtle border border-dark-subtle rounded-3">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="#">API</a>
+    <a class="nav-link active text-emphasis  border border-dark-subtle rounded-3" style="background-color: #3d4756; color:white" aria-current="page" href="#">API</a>
   </li>
 </ul><br><br>
 
@@ -32,25 +106,27 @@ html {
 
 <div class="container">
   <div class="row">
-    <div class="col-md-3 shadow-lg p-3 mb-5 bg-white rounded" style="height: 500px;">
-      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-search" style="color: white;"></i></h3>
+    <div class="col-md-3 shadow-lg p-3 mb-5 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" style="height: 500px;">
+      <h3 style=" text-align: center;border-radius: 10px;"><i class="fas fa-search" style="color: #3d4756;"></i></h3>
 
-      <label class="form-label" for="api_key">Clef API:</label><br>
-      <input class="form-control" type="password" id="api_key" name="api_key" required><br>
+      <label class="form-label roboto-bold" for="api_key"><i class="fas fa-key" style="color: #3d4756;"></i> API:</label><br>
+      <input class="form-control" type="password" id="api_key" name="api_key" required placeholder="API KEY"><br>
 
+      <hr/>
 
-      <label class="form-label" for="server_id">Serveur:</label><br>
-      <input type="text" id="server_id" name="server_id" class="form-control" required><br>
-      <button id="btnsubmit" type="submit" class="btn btn-primary btn-sm" onclick="fetchAPI()">Rechercher</button><br>
+      <label class="form-label roboto-bold" for="server_id"><i class="fab fa-searchengin"></i> Nom de serveur:</label><br>
+      <input type="text" id="server_id" name="server_id" class="form-control" required placeholder="Hostname"><br>
+      <button id="btnsubmit" type="submit" class="button" onclick="fetchAPI()"><i class="fab fa-searchengin"></i></button>
 
+      <hr/>
 
-      <br><label class="form-label" for="application">Application:</label><br>
-      <input type="text" id="application" name="application" class="form-control" required><br>
-      <button id="btnsubmitapp" type="submit" class="btn btn-info btn-sm" onclick="fetchApplication()">Rechercher</button>
+      <label class="form-label roboto-bold" for="application"><i class="fab fa-searchengin"></i> Application:</label><br>
+      <input type="text" id="application" placeholder="App Name" name="application" class="form-control" required><br>
+      <button id="btnsubmitapp" type="submit" class="button" onclick="fetchApplication()"><i class="fab fa-searchengin"></i></button>
     </div>
 
-    <div class="col-md-4 shadow-lg p-3 mb-5 bg-white rounded" style="margin-left: 20px;">
-      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-server" style="color: white;"></i></i> </h3><br>
+    <div class="col-md-4 shadow-lg p-3 mb-5 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" style="margin-left: 20px;">
+      <h3 style=" text-align: center;border-radius: 10px;"><i class="fas fa-server" style="color: #3d4756;"></i></i> </h3><br>
       <div class="table-responsive-sm" style="margin: 5px;">
         <table class="table">
           <tbody id="result">
@@ -59,10 +135,13 @@ html {
       </div>
     </div>
 
-    <div class="col-md-4 shadow-lg p-3 mb-5 bg-white rounded" style="margin-left: 20px; height: 150px;">
-      <h3 style="background-color: #0d6efd; text-align: center;border-radius: 10px;"><i class="fas fa-database" style="color: white;"></i></i> </h3><br>
-      <ul>Mise à jour de la base, il y a:<b> {{ db_age }} jour(s)<b></ul>
-      <ul>Type de prestation: <b id="presta"> <b></ul>
+    <div class="col-md-4 shadow-lg p-3 mb-5 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" style="margin-left: 20px; height: 150px;">
+      <h3 style=" text-align: center;border-radius: 10px;"><i class="fas fa-database" style="color: #3d4756;"></i></i> </h3><br>
+
+
+      <ul>Mise à jour de la base, il y a:<b><code> {{ db_age }} jour(s)</code></b></ul>
+        <hr/>
+      <ul style="margin-bottom: 2rem">Type de prestation: <b><code id="presta"> </code></b></ul><br>
 
     </div>
   </div>
