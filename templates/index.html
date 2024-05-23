@@ -174,11 +174,7 @@ button:hover::before {
 
         if (Array.isArray(data) && data.length > 1 && Array.isArray(data[1]) && data[1].length > 0) {
             const table = document.createElement('table');
-            table.classList.add('table');
-            table.classList.add('table-striped');
-            table.classList.add('table-dark');
-            table.classList.add('table-bordered');
-            table.classList.add('table-hover');
+            table.classList.add('table', 'table-striped', 'table-dark', 'table-bordered', 'table-hover');
 
             // Create table body
             const tbody = document.createElement('tbody');
@@ -188,7 +184,7 @@ button:hover::before {
             const presta = document.getElementById('presta');
             presta.innerHTML = '';
             presta.innerHTML = data[1][0][65];
-            console.log("prestation: " + data[1][0][65])
+            console.log("prestation: " + data[1][0][65]);
 
             for (let i = 0; i < columnNames.length; i++) {
                 const row = document.createElement('tr');
@@ -200,9 +196,19 @@ button:hover::before {
 
                 // Create table cell for corresponding value
                 const valueCell = document.createElement('td');
-                valueCell.textContent = values[i] || 'N/A'; // Add "N/A" if value is empty or null
-                row.appendChild(valueCell);
+                
+                // Check if it's the first row's value
+                if (i === 0) {
+                    const clickableElement = document.createElement('a');
+                    clickableElement.href = '#';
+                    clickableElement.textContent = values[i] || 'N/A'; // Add "N/A" if value is empty or null
+                    clickableElement.onclick = () => fetchApplication(values[i]);
+                    valueCell.appendChild(clickableElement);
+                } else {
+                    valueCell.textContent = values[i] || 'N/A'; // Add "N/A" if value is empty or null
+                }
 
+                row.appendChild(valueCell);
                 tbody.appendChild(row);
             }
 
@@ -215,14 +221,11 @@ button:hover::before {
     } catch (error) {
         console.error("Failed to fetch API:", error);
     }
-}
+  }
 
-
-
-  async function fetchApplication() {
-    const application = document.getElementById('application').value;
+  async function fetchApplication(application) {
     const apiKey = document.getElementById('api_key').value;
-  
+
     try {
       const response = await fetch(`/applications/${application}`, {
         headers: {
@@ -230,10 +233,10 @@ button:hover::before {
           'access_token': apiKey
         }
       });
-  
+
       const data = await response.json();
       console.log(data);
-  
+
       // Convert the data to a JSON string
       const jsonData = JSON.stringify(data);
 
@@ -246,20 +249,17 @@ button:hover::before {
           localStorage.removeItem('applicationData');
       }
 
- 
       // Store the JSON data in local storage
       localStorage.setItem('applicationData', jsonData);
-  
+
       // Redirect to the application.html page
       window.location.href = '/application';
     } catch (error) {
       console.error("Failed to fetch application:", error);
     }
   }
-  
-  
-  
 </script>
+
 
 
 
