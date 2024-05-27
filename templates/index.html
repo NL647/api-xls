@@ -122,7 +122,7 @@ button:hover::before {
 
       <label class="form-label roboto-bold" for="application"><i class="fab fa-searchengin"></i> Application:</label><br>
       <input type="text" id="application" placeholder="App Name" name="application" class="form-control" required><br>
-      <button id="btnsubmitapp" type="submit" class="button" onclick="fetchApplication()"><i class="fab fa-searchengin"></i></button>
+      <button id="btnsubmitapp" type="submit" class="button" onclick="fetchApplication(document.getElementById('application').value)"><i class="fab fa-searchengin"></i></button>
     </div>
 
     <div class="col-md-4 shadow-lg p-3 mb-5 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3" style="margin-left: 20px;">
